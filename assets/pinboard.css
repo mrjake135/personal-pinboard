@@ -1,0 +1,629 @@
+/* ============================================================
+   Khoa Phan — Pinboard
+   Aesthetic: cork board behind everything, items pinned, taped,
+   scattered. Each tab is a curated arrangement on the board.
+   ============================================================ */
+
+:root {
+  --cork-base:  #b8884a;   /* medium cork — more contrast w/ cream papers */
+  --cork-dark:  #7e5a24;
+  --cork-light: #d4a868;
+  --cork-shadow:#4f3614;
+
+  --ink:        #1b2538;
+  --ink-soft:   #4a566d;
+  --ink-faint:  rgba(27,37,56,0.55);
+  --red:        #c0392b;
+  --green:      #486b3a;
+  --hi:         #fff066;
+
+  --paper:      #fbf4e0;
+  --paper-2:    #f3ead0;
+  --paper-edge: #d8c89a;
+
+  --f-print:    "Playfair Display", "Georgia", serif;
+  --f-body:     "EB Garamond", "Georgia", serif;
+  --f-hand:     "Caveat", "Bradley Hand", cursive;
+  --f-hand2:    "Kalam", "Comic Sans MS", cursive;
+  --f-type:     "Special Elite", "Courier New", monospace;
+  --f-marker:   "Permanent Marker", "Marker Felt", cursive;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--f-body);
+  color: var(--ink);
+  background: #2b1d0e;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  padding: 64px 0 80px;
+  background:
+    radial-gradient(ellipse at 50% 30%, #5d4628 0%, #3a2a18 60%, #1f140a 100%);
+  min-height: 100vh;
+}
+
+/* ============================================================
+   CORK BOARD — natural, classic, fine-grained
+   ============================================================ */
+.board {
+  position: relative;
+  width: min(1280px, 96vw);
+  margin: 0 auto;
+  min-height: 1500px;
+
+  /* wooden frame: lighter, simpler */
+  padding: 10px;
+  background:
+    linear-gradient(135deg, #8a6638 0%, #6b4a24 25%, #8a6638 50%, #5a3c1c 75%, #7a5630 100%);
+  background-size: 100% 100%;
+  box-shadow:
+    /* outer drop */
+    0 24px 50px -20px rgba(0,0,0,0.7),
+    0 50px 90px -40px rgba(0,0,0,0.5),
+    /* wood inner bevel */
+    inset 0 2px 0 rgba(255,220,170,0.3),
+    inset 0 -2px 0 rgba(0,0,0,0.35),
+    inset 2px 0 0 rgba(255,220,170,0.15),
+    inset -2px 0 0 rgba(0,0,0,0.25);
+  border-radius: 3px;
+}
+
+/* the actual cork surface, inside the frame */
+.board::before {
+  content: "";
+  position: absolute;
+  inset: 10px;
+  background-color: var(--cork-base);
+  /* fine cork granules — dense, small, multi-layered */
+  background-image:
+    /* fine speckle layer 1 */
+    radial-gradient(circle at 50% 50%, var(--cork-dark) 0.7px, transparent 1.2px),
+    /* fine speckle layer 2, offset */
+    radial-gradient(circle at 50% 50%, var(--cork-shadow) 0.6px, transparent 1.1px),
+    /* highlight specks */
+    radial-gradient(circle at 50% 50%, var(--cork-light) 0.5px, transparent 1.0px),
+    /* mid speckle */
+    radial-gradient(circle at 50% 50%, var(--cork-dark) 0.9px, transparent 1.6px),
+    /* base tone — flat, not too vignetted */
+    linear-gradient(180deg, var(--cork-light) 0%, var(--cork-base) 50%, var(--cork-dark) 100%);
+  background-size:
+    5px 5px,
+    7px 7px,
+    9px 9px,
+    13px 13px,
+    100% 100%;
+  background-position:
+    0 0, 2px 3px, 4px 1px, 1px 4px, 0 0;
+  box-shadow:
+    inset 0 0 0 1px rgba(80,50,20,0.4),
+    inset 0 0 50px rgba(80,50,20,0.18),
+    inset 0 4px 8px rgba(0,0,0,0.2);
+  z-index: 0;
+}
+
+/* subtle larger flecks layered on top */
+.board::after {
+  content: "";
+  position: absolute;
+  inset: 10px;
+  pointer-events: none;
+  opacity: 0.5;
+  background-image:
+    radial-gradient(ellipse 3px 2px at 12% 18%, var(--cork-shadow) 0, transparent 70%),
+    radial-gradient(ellipse 2px 3px at 38% 8%,  var(--cork-shadow) 0, transparent 70%),
+    radial-gradient(ellipse 3px 2px at 72% 22%, var(--cork-dark) 0, transparent 70%),
+    radial-gradient(ellipse 4px 2px at 88% 56%, var(--cork-shadow) 0, transparent 70%),
+    radial-gradient(ellipse 2px 2px at 18% 78%, var(--cork-dark) 0, transparent 70%),
+    radial-gradient(ellipse 3px 2px at 60% 84%, var(--cork-shadow) 0, transparent 70%),
+    radial-gradient(ellipse 2px 3px at 5%  44%, var(--cork-dark) 0, transparent 70%),
+    radial-gradient(ellipse 2px 3px at 92% 12%, var(--cork-shadow) 0, transparent 70%),
+    radial-gradient(ellipse 3px 2px at 30% 60%, var(--cork-dark) 0, transparent 70%),
+    radial-gradient(ellipse 2px 2px at 80% 70%, var(--cork-shadow) 0, transparent 70%);
+  background-size: 180px 180px;
+  mix-blend-mode: multiply;
+  z-index: 0;
+}
+
+/* keep page content above the cork pseudo-elements */
+.board > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* inner padding for content (since .board is now the frame) */
+.board {
+  /* outer 10px is frame; content padding goes here too via a wrapper */
+}
+.board > .page-enter {
+  padding: 56px 56px 80px;
+}
+
+/* ============================================================
+   PAPER-LABEL NAV — little pinned strips along the top of the board
+   ============================================================ */
+.tabs {
+  position: relative;
+  width: min(1280px, 96vw);
+  margin: 0 auto 22px;
+  padding: 0 32px;
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  justify-content: center;
+  z-index: 5;
+}
+
+.tab {
+  position: relative;
+  font-family: var(--f-type);
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  line-height: 1;
+  padding: 11px 18px 10px;
+  background: var(--paper);
+  color: var(--ink);
+  border: none;
+  border-radius: 1px;
+  cursor: pointer;
+  text-transform: uppercase;
+  transform-origin: 50% -6px;
+  transition: transform .18s ease, background .18s ease, color .18s ease;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.55) inset,
+    0 -1px 0 rgba(0,0,0,0.06) inset,
+    2px 3px 5px -2px rgba(0,0,0,0.4),
+    4px 7px 12px -6px rgba(0,0,0,0.35);
+}
+/* a tiny brass tack pinning each label */
+.tab::before {
+  content: "";
+  position: absolute;
+  top: -5px;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  margin-left: -4px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #ffe39a 0%, #c08a2a 55%, #6b4810 100%);
+  box-shadow:
+    inset 0.5px 0.5px 1px rgba(255,255,255,0.5),
+    inset -1px -1.5px 2px rgba(0,0,0,0.35),
+    1px 1.5px 2px rgba(0,0,0,0.45);
+  z-index: 2;
+}
+
+/* gentle, varied tilt — no alternating zig-zag */
+.tab:nth-child(1) { transform: rotate(-1.2deg); }
+.tab:nth-child(2) { transform: rotate(0.6deg); }
+.tab:nth-child(3) { transform: rotate(-0.4deg); }
+.tab:nth-child(4) { transform: rotate(1deg); }
+.tab:nth-child(5) { transform: rotate(-0.8deg); }
+.tab:nth-child(6) { transform: rotate(0.4deg); }
+.tab:nth-child(7) { transform: rotate(-0.2deg); }
+
+.tab:hover {
+  transform: rotate(0deg) translateY(-2px);
+  z-index: 6;
+}
+
+.tab.active {
+  background: var(--red);
+  color: #fff8e6;
+  transform: rotate(0deg) translateY(1px) !important;
+  z-index: 7;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.25) inset,
+    0 -1px 0 rgba(0,0,0,0.25) inset,
+    2px 3px 5px -2px rgba(0,0,0,0.5),
+    4px 7px 14px -6px rgba(0,0,0,0.45);
+}
+.tab.active::before {
+  background: radial-gradient(circle at 35% 30%, #fff1c8 0%, #d8a840 55%, #7a4f10 100%);
+}
+
+/* ============================================================
+   PIN
+   ============================================================ */
+.pin {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  z-index: 10;
+  background: radial-gradient(circle at 35% 30%, #ffb6b0 0%, #c0392b 40%, #6d180f 100%);
+  box-shadow:
+    inset 1px 1px 2px rgba(255,255,255,0.4),
+    inset -2px -3px 4px rgba(0,0,0,0.4),
+    1px 2px 3px rgba(0,0,0,0.45),
+    3px 5px 6px -2px rgba(0,0,0,0.35);
+}
+.pin::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 2px; height: 2px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,255,0.7) 0, transparent 60%);
+  transform: translate(-50%, -50%);
+}
+.pin.blue   { background: radial-gradient(circle at 35% 30%, #b6d4ff 0%, #2b6cc0 40%, #0f3870 100%); }
+.pin.yellow { background: radial-gradient(circle at 35% 30%, #fff2a8 0%, #d8a72b 40%, #6e520a 100%); }
+.pin.green  { background: radial-gradient(circle at 35% 30%, #c6e8b0 0%, #486b3a 40%, #20381a 100%); }
+.pin.white  { background: radial-gradient(circle at 35% 30%, #ffffff 0%, #d8d8d4 40%, #7c7c78 100%); }
+.pin.black  { background: radial-gradient(circle at 35% 30%, #7a7a7a 0%, #2a2a2a 40%, #0a0a0a 100%); }
+
+/* ============================================================
+   TAPE (washi style)
+   ============================================================ */
+.tape {
+  position: absolute;
+  z-index: 6;
+  background: rgba(245,232,176,0.55);
+  border-left:  1px dashed rgba(180,160,90,0.4);
+  border-right: 1px dashed rgba(180,160,90,0.4);
+  box-shadow: 0 1px 0 rgba(255,255,255,0.4) inset, 0 1px 3px rgba(0,0,0,0.15);
+}
+.tape.blue   { background: rgba(160,200,255,0.55); }
+.tape.pink   { background: rgba(255,180,210,0.55); }
+.tape.mint   { background: rgba(170,230,200,0.55); }
+.tape.kraft  { background: rgba(200,160,100,0.6); }
+
+/* ============================================================
+   PAPERS / CARDS
+   ============================================================ */
+
+.card {
+  position: relative;
+  background: var(--paper);
+  padding: 18px 20px;
+  font-family: var(--f-body);
+  color: var(--ink);
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.5) inset,
+    0 6px 10px -4px rgba(0,0,0,0.4),
+    0 16px 24px -10px rgba(0,0,0,0.25);
+}
+
+/* lined index card */
+.indexcard {
+  background: #fbf4e0;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0, transparent 27px,
+    rgba(140,170,210,0.55) 27px, rgba(140,170,210,0.55) 28px
+  );
+  border: 1px solid rgba(140,110,60,0.4);
+  border-top: 3px solid #c97a82;
+  padding: 18px 18px 18px 50px;
+  position: relative;
+}
+.indexcard::before {
+  content: "";
+  position: absolute;
+  top: 0; bottom: 0;
+  left: 36px;
+  width: 2px;
+  background: #c97a82;
+  opacity: 0.7;
+}
+
+/* yellow legal scrap */
+.scrap-yellow {
+  background: #fbe98e;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0, transparent 26px,
+    rgba(120,80,40,0.4) 26px, rgba(120,80,40,0.4) 27px
+  );
+  padding: 18px 18px;
+  position: relative;
+  box-shadow:
+    0 6px 10px -4px rgba(0,0,0,0.4),
+    0 16px 24px -10px rgba(0,0,0,0.3);
+}
+.scrap-yellow::before { /* torn top edge */
+  content: "";
+  position: absolute;
+  top: -6px;
+  left: 0; right: 0;
+  height: 12px;
+  background: inherit;
+  clip-path: polygon(0 50%, 4% 30%, 9% 65%, 14% 25%, 20% 70%, 27% 35%, 33% 60%, 40% 30%, 47% 65%, 54% 35%, 60% 60%, 66% 30%, 72% 65%, 78% 35%, 85% 60%, 92% 30%, 96% 65%, 100% 40%, 100% 100%, 0 100%);
+}
+
+/* white note */
+.scrap-white {
+  background: #fafaf2;
+  padding: 16px 18px;
+  box-shadow:
+    0 4px 8px -2px rgba(0,0,0,0.35),
+    0 12px 20px -10px rgba(0,0,0,0.25);
+  position: relative;
+}
+
+/* sticky notes (square) */
+.sticky {
+  background: linear-gradient(180deg, #fff4a0, #ffe96b);
+  padding: 14px 14px 16px;
+  font-family: var(--f-hand);
+  font-size: 20px;
+  line-height: 24px;
+  color: #4a3a10;
+  min-width: 160px;
+  box-shadow:
+    0 4px 8px -2px rgba(0,0,0,0.35),
+    0 1px 0 rgba(255,255,255,0.5) inset;
+  position: relative;
+}
+.sticky.pink  { background: linear-gradient(180deg, #ffc8d8, #ffaec0); color: #6a2738; }
+.sticky.blue  { background: linear-gradient(180deg, #cfe4ff, #a9cbf5); color: #1a3158; }
+.sticky.green { background: linear-gradient(180deg, #d4eec0, #b7df9a); color: #2a4818; }
+.sticky.orange{ background: linear-gradient(180deg, #ffd8a8, #ffb870); color: #5a3010; }
+
+/* polaroid */
+.polaroid {
+  background: #fafaf2;
+  padding: 10px 10px 40px;
+  font-family: var(--f-hand);
+  text-align: center;
+  box-shadow:
+    0 1px 0 rgba(0,0,0,0.05) inset,
+    0 8px 14px -4px rgba(0,0,0,0.5),
+    0 20px 30px -16px rgba(0,0,0,0.35);
+  color: var(--ink);
+  position: relative;
+}
+.polaroid .img {
+  display: block;
+  background: #1a1a1a;
+  background-size: cover;
+  background-position: center;
+  width: 100%;
+  height: 100%;
+}
+.polaroid .caption {
+  position: absolute;
+  bottom: 10px;
+  left: 0; right: 0;
+  font-size: 20px;
+  text-align: center;
+  color: var(--ink);
+}
+
+/* ticket stub */
+.ticket {
+  background: linear-gradient(90deg, #c0392b 0%, #c0392b 28%, #fafaf2 28%, #fafaf2 100%);
+  position: relative;
+  padding: 14px 18px 14px 88px;
+  min-width: 240px;
+  color: var(--ink);
+  font-family: var(--f-body);
+  box-shadow:
+    0 6px 12px -4px rgba(0,0,0,0.45),
+    0 1px 0 rgba(255,255,255,0.5) inset;
+}
+.ticket .stub {
+  position: absolute;
+  top: 0; left: 0; bottom: 0;
+  width: 70px;
+  border-right: 2px dashed rgba(255,255,255,0.6);
+  color: #fff;
+  font-family: var(--f-marker);
+  font-size: 14px;
+  letter-spacing: 0.15em;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 0;
+}
+.ticket .name {
+  font-family: var(--f-marker);
+  color: var(--ink);
+  font-size: 22px;
+  letter-spacing: 0.04em;
+}
+.ticket .meta {
+  font-family: var(--f-type);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-top: 4px;
+}
+
+/* badge / business card */
+.bizcard {
+  background: linear-gradient(135deg, #fbf4e0 0%, #ede0bd 100%);
+  border: 1px solid rgba(140,110,60,0.4);
+  padding: 16px 18px;
+  width: 280px;
+  box-shadow:
+    0 6px 12px -4px rgba(0,0,0,0.45),
+    0 1px 0 rgba(255,255,255,0.5) inset;
+  position: relative;
+}
+
+/* photo strip (vertical 4-up) */
+.photostrip {
+  background: #fafaf2;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  box-shadow:
+    0 8px 16px -4px rgba(0,0,0,0.5),
+    0 20px 30px -16px rgba(0,0,0,0.35);
+}
+.photostrip .cell {
+  width: 110px;
+  height: 90px;
+  background: linear-gradient(180deg, #2a2a2a 0%, #1a1a1a 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+/* envelope */
+.envelope {
+  background: #f6e8c8;
+  padding: 16px 20px;
+  position: relative;
+  box-shadow:
+    0 6px 12px -4px rgba(0,0,0,0.45);
+}
+.envelope::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 22px;
+  background: linear-gradient(180deg, #e2d099 0%, #f0e0a8 100%);
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  border-bottom: 1px solid rgba(140,110,60,0.3);
+}
+
+/* ============================================================
+   TYPE
+   ============================================================ */
+.page-title {
+  font-family: var(--f-marker);
+  font-size: 56px;
+  line-height: 0.95;
+  color: #fbf4e0;
+  text-shadow:
+    2px 3px 0 rgba(0,0,0,0.35),
+    0 0 20px rgba(0,0,0,0.4);
+  letter-spacing: 0.02em;
+  margin: 0;
+}
+
+.section-h {
+  font-family: var(--f-print);
+  font-weight: 700;
+  font-size: 22px;
+  margin: 0 0 6px;
+  color: var(--ink);
+}
+
+.kicker {
+  font-family: var(--f-type);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin: 0 0 4px;
+}
+
+.hand   { font-family: var(--f-hand);  font-size: 24px; line-height: 28px; color: var(--ink); }
+.hand2  { font-family: var(--f-hand2); font-size: 18px; line-height: 24px; color: var(--ink); }
+.marker { font-family: var(--f-marker); }
+.type   { font-family: var(--f-type); letter-spacing: 0.12em; }
+
+p, li {
+  font-family: var(--f-body);
+  font-size: 17px;
+  line-height: 25px;
+  color: var(--ink);
+  margin: 0 0 10px;
+}
+
+.hi { background: linear-gradient(105deg, transparent 1%, #fff066 2%, #fff066 98%, transparent 99%); padding: 0 4px; box-decoration-break: clone; -webkit-box-decoration-break: clone;}
+.hi-pink { background: linear-gradient(100deg, transparent 1%, #ffb3d1 2%, #ffb3d1 98%, transparent 99%); padding: 0 4px; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+
+/* ============================================================
+   BOARD HEADER (page title strip pinned to cork)
+   ============================================================ */
+.board-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding-bottom: 24px;
+  margin-bottom: 28px;
+  border-bottom: 2px dashed rgba(50,30,8,0.4);
+}
+.board-header .sub {
+  font-family: var(--f-hand);
+  font-size: 28px;
+  color: #fbf4e0;
+  text-shadow: 1px 2px 0 rgba(0,0,0,0.4);
+  transform: rotate(-1.6deg);
+}
+
+/* ============================================================
+   PINNED-LAYOUT helper: absolute positioning canvas
+   ============================================================ */
+.canvas {
+  position: relative;
+  width: 100%;
+  min-height: 1100px;
+}
+
+.item {
+  position: absolute;
+}
+
+.tilt-l  { transform: rotate(-2.4deg); }
+.tilt-r  { transform: rotate(2.6deg); }
+.tilt-ll { transform: rotate(-5deg); }
+.tilt-rr { transform: rotate(4.6deg); }
+
+/* page-enter */
+.page-enter { animation: pageIn .35s ease-out both; }
+@keyframes pageIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* form bits */
+.field { display: block; margin: 10px 0; }
+.field label {
+  display: block;
+  font-family: var(--f-type);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: 4px;
+}
+.field input, .field textarea {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 2px dotted var(--ink-soft);
+  font-family: var(--f-hand);
+  font-size: 22px;
+  color: var(--ink);
+  padding: 4px 2px;
+  outline: none;
+  resize: none;
+}
+.field input:focus, .field textarea:focus { border-bottom-color: var(--red); }
+
+.btn-stamp {
+  display: inline-block;
+  font-family: var(--f-marker);
+  font-size: 22px;
+  color: var(--red);
+  background: none;
+  border: 3px solid var(--red);
+  border-radius: 4px;
+  padding: 6px 14px;
+  transform: rotate(-3deg);
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: transform .15s ease;
+}
+.btn-stamp:hover { transform: rotate(-1deg) scale(1.04); }
+
+/* small screens — let board scroll horizontally rather than reflow */
+@media (max-width: 900px) {
+  .board { padding: 36px 22px 60px; }
+  .canvas { min-width: 1100px; }
+  body { overflow-x: auto; }
+}

@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Khoa Phan · Personal Pinboard</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Kalam:wght@300;400;700&family=Permanent+Marker&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Special+Elite&display=swap" rel="stylesheet"/>
+
+<link rel="stylesheet" href="assets/pinboard.css"/>
+</head>
+<body>
+<div id="root"></div>
+
+<script crossorigin src="https://unpkg.com/react@18.3.1/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
+
+<!-- web component for drop-in user photos -->
+<script src="assets/image-slot.js"></script>
+
+<!-- tweaks framework + decorations -->
+<script type="text/babel" src="assets/tweaks-panel.jsx"></script>
+<script type="text/babel" src="assets/decorations.jsx"></script>
+
+<!-- pages -->
+<script type="text/babel" src="assets/pages-a.jsx"></script>
+<script type="text/babel" src="assets/pages-b.jsx"></script>
+
+<!-- app last -->
+<script type="text/babel" src="assets/app.jsx"></script>
+</body>
+</html>
