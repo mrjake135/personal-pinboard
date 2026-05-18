@@ -36,19 +36,14 @@ html, body {
   padding: 0;
   font-family: var(--f-body);
   color: var(--ink);
+  background: #2b1d0e;
   -webkit-font-smoothing: antialiased;
-}
-
-/* gradient lives on <html> so it always fills the viewport even when <body>
-   gets zoom-scaled down on narrow screens (mobile auto-fit). */
-html {
-  background:
-    radial-gradient(ellipse at 50% 30%, #5d4628 0%, #3a2a18 60%, #1f140a 100%) fixed;
-  min-height: 100%;
 }
 
 body {
   padding: 64px 0 80px;
+  background:
+    radial-gradient(ellipse at 50% 30%, #5d4628 0%, #3a2a18 60%, #1f140a 100%);
   min-height: 100vh;
 }
 
@@ -626,5 +621,9 @@ p, li {
 }
 .btn-stamp:hover { transform: rotate(-1deg) scale(1.04); }
 
-/* small screens: body is zoom-scaled to fit (see fitToViewport in index.html),
-   so the pinboard composition is preserved instead of reflowing. */
+/* small screens — let board scroll horizontally rather than reflow */
+@media (max-width: 900px) {
+  .board { padding: 36px 22px 60px; }
+  .canvas { min-width: 1100px; }
+  body { overflow-x: auto; }
+}
