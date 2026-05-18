@@ -12,6 +12,23 @@
 <link rel="stylesheet" href="assets/pinboard.css"/>
 </head>
 <body>
+<script>
+/* Fit the 1280px-wide pinboard into narrower viewports by zoom-scaling <body>.
+   The design uses absolute positioning, so reflowing isn't an option — instead
+   the whole board shrinks proportionally and the composition is preserved.
+   Above the design width we let it render 1:1. */
+(function(){
+  var DESIGN_W = 1280;
+  function fit(){
+    var w = document.documentElement.clientWidth;
+    document.body.style.zoom = w < DESIGN_W ? (w / DESIGN_W) : '';
+  }
+  window.addEventListener('resize', fit);
+  window.addEventListener('orientationchange', fit);
+  document.addEventListener('DOMContentLoaded', fit);
+  fit();
+})();
+</script>
 <div id="root"></div>
 
 <script crossorigin src="https://unpkg.com/react@18.3.1/umd/react.production.min.js"></script>
